@@ -2,14 +2,14 @@ package com.test.logbook.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
-@Entity(name = "Workout")
+@Entity(name = "workout")
 @Table
 public class Workout {
 
@@ -17,16 +17,49 @@ public class Workout {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String name;
-  @ManyToOne
-  @JsonManagedReference
-  @JoinColumn(name = "created_by_email")
-  private AppUser createdBy;
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JsonBackReference
+  @JoinColumn(name = "app_user_email")
+  private User createdBy;
   @OneToMany(cascade = {CascadeType.ALL})
   @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
-  private List<Exercise> exerciseList = new ArrayList<>();
+  private Collection<Exercise> exerciseList = new ArrayList<>();
+  private LocalDate dateCreated = LocalDate.now();
+
+  public User getAppUser() {
+    return createdBy;
+  }
+
+  public void setAppUser(User appUser) {
+    this.createdBy = appUser;
+  }
 
 
   public Workout() {}
+
+  public Workout(Long id, String name, Collection<Exercise> exerciseList, User createdBy) {
+    this.id = id;
+    this.name = name;
+    this.exerciseList = exerciseList;
+    this.createdBy = createdBy;
+  }
+
+  public Workout(String name, Collection<Exercise> exerciseList, User createdBy) {
+    this.name = name;
+    this.exerciseList = exerciseList;
+    this.createdBy = createdBy;
+  }
+
+  public Workout(Long id, String name, User createdBy) {
+    this.id = id;
+    this.name = name;
+    this.createdBy = createdBy;
+  }
+
+  public Workout(String name, User createdBy) {
+    this.name = name;
+    this.createdBy = createdBy;
+  }
 
   @Override
   public String toString() {
@@ -35,34 +68,17 @@ public class Workout {
           ", name='" + name + '\'' +
           ", createdBy=" + createdBy +
           ", exerciseList=" + exerciseList +
+          ", dateCreated=" + dateCreated +
           '}';
   }
 
-  public Workout(Long id, String name, List<Exercise> exerciseList, AppUser createdBy) {
-    this.id = id;
-    this.name = name;
-    this.exerciseList = exerciseList;
-    this.createdBy = createdBy;
+  public LocalDate getDateCreated() {
+    return dateCreated;
   }
 
-  public Workout(String name, List<Exercise> exerciseList, AppUser createdBy) {
-    this.name = name;
-    this.exerciseList = exerciseList;
-    this.createdBy = createdBy;
+  public void setDateCreated(LocalDate dateCreated) {
+    this.dateCreated = dateCreated;
   }
-
-  public Workout(Long id, String name, AppUser createdBy) {
-    this.id = id;
-    this.name = name;
-    this.createdBy = createdBy;
-  }
-
-  public Workout(String name, AppUser createdBy) {
-    this.name = name;
-    this.createdBy = createdBy;
-  }
-
-
 
   public Long getId() {
     return id;
@@ -80,19 +96,19 @@ public class Workout {
     this.name = name;
   }
 
-  public AppUser getCreatedBy() {
+  public User getCreatedBy() {
     return createdBy;
   }
 
-  public void setCreatedBy(AppUser createdBy) {
+  public void setCreatedBy(User createdBy) {
     this.createdBy = createdBy;
   }
 
-  public List<Exercise> getExerciseList() {
+  public Collection<Exercise> getExerciseList() {
     return exerciseList;
   }
 
-  public void setExerciseList(List<Exercise> exerciseList) {
+  public void setExerciseList(Collection<Exercise> exerciseList) {
     this.exerciseList = exerciseList;
   }
 

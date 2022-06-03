@@ -1,17 +1,15 @@
 package com.test.logbook.controllers;
 
-import com.test.logbook.model.AppUser;
+import com.test.logbook.model.User;
 import com.test.logbook.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/user")
+@CrossOrigin
 public class UserController {
   private final UserService userService;
 
@@ -21,12 +19,17 @@ public class UserController {
   }
 
   @GetMapping
-  public List<AppUser> getStudents() {
+  public List<User> getStudents() {
     return userService.getUsers();
   }
 
+  @PostMapping
+  public void createUser(@RequestBody User user) {
+    userService.createUser(user);
+  }
+
   @GetMapping(path = "{user_email}")
-  public AppUser getUser(@PathVariable("user_email") String email) {
+  public User getUser(@PathVariable("user_email") String email) {
     return userService.getUser(email);
   }
 }

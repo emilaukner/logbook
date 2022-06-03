@@ -1,16 +1,18 @@
 package com.test.logbook.controllers;
 
-import com.test.logbook.model.AppUser;
+import com.test.logbook.model.User;
 import com.test.logbook.model.Exercise;
 import com.test.logbook.model.Workout;
 import com.test.logbook.service.WorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController
 @RequestMapping(path="api/workout")
+@CrossOrigin
 public class WorkoutController {
 
   private final WorkoutService service;
@@ -25,14 +27,19 @@ public class WorkoutController {
     return service.getWorkouts();
   }
 
+  @GetMapping(path="/ids")
+  public List<Long> getWorkoutIds() {
+    return service.getIds();
+  }
+
   @GetMapping(path = "{workoutId}")
   public Workout getWorkout(@PathVariable("workoutId") Long id) {
     return service.getWorkout(id);
   }
 
   @PostMapping
-  public void createWorkout(String name, AppUser createdBy) {
-    service.createWorkout(name, createdBy);
+  public Long createWorkout(@RequestParam String name, @RequestParam String userEmail, @RequestParam String userName) {
+    return service.createWorkout(name, userEmail, userName);
   }
 
   @PutMapping(path = "{workoutId}")

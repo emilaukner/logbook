@@ -1,32 +1,32 @@
 package com.test.logbook.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name="appUser")
+@Entity(name="app_user")
 @Table
-public class AppUser {
+public class User {
   @Id
   @Column(name = "email", nullable = false, unique = true)
   private String email;
   private String name;
-  @OneToMany
-  @JsonBackReference
+  @OneToMany(mappedBy="createdBy")
   private List<Workout> workouts = new ArrayList<>();
 
-  public AppUser(String email) {
+  public User(String email) {
     this.email = email;
   }
 
-  public AppUser(String email, String name) {
+  public User(String email, String name) {
     this.email = email;
     this.name = name;
   }
 
-  public AppUser() {
+  public User() {
 
   }
 
